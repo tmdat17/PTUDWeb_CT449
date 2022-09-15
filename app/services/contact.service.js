@@ -20,6 +20,7 @@ class ContactService {
         return contact;
     }
 
+    // Thêm mới 1 contact mới (ứng dụng upsert: true) tìm không thấy thì thêm mới contact luôn 
     async create(payload){
         const contact = this.extractContactData(payload);
         const result = await this.Contact.findOneAndUpdate(
@@ -31,6 +32,21 @@ class ContactService {
         );
         return result.value;
     }
+
+    // Tìm contact với find không có đối số sẽ xuất ra hết các contacts
+    async find(filter){
+        const cursor = await this.Contact.find(filter);
+        return await cursor.toArray();
+    }
+
+    // Tìm contact theo tên
+    // $options để so khớp tên contact cần tìm kiếm theo biểu thức chính quy không phân biệt hoa thường
+    async findByName(name){
+        return await this.find({
+            name: { $regex: new RegExp(name), $options: "i"},
+        });
+    }
+
 }
 
 module.exports = ContactService;
