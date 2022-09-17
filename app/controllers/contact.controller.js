@@ -98,10 +98,20 @@ exports.delete = async (req, res, next) => {
     }
 };
 
-exports.deleteAll = (req, res) => {
-    res.send({
-        message: "deleteAll handler",
-    });
+
+//Delete all contacts of a user from the database
+exports.deleteAll = async (req, res, next) => {
+    try {
+        const contactService = new ContactService(MongoDB.client);
+        const deletedCount = await contactService.deleteAll();
+        return res.send({
+            message: `${deletedCount} contacts were deleted successfully`,
+        });
+    } catch (error) {
+        return next(
+            new ApiError (500, "An error occured while removing all contacts")
+        );
+    }
 };
 
 

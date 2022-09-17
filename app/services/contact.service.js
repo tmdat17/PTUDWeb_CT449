@@ -83,6 +83,12 @@ class ContactService {
     async findAllFavorite(){
         return await this.find({favorite: true});
     }
+
+    // Xóa tất cả các contact trong database
+    async deleteAll(){
+        const result = await this.Contact.deleteMany({});
+        return result.deletedCount;
+    }
 }
 
 module.exports = ContactService;
