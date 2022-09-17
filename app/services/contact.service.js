@@ -5,6 +5,8 @@ class ContactService {
         this.Contact = client.db().collection("contacts");
     }
     // Định nghĩa các phương thức truy xuất CSDL sử dụng mongodb API
+    
+    // Tạo một contact mới dựa vào đối số payload, nếu key nào undefined thì xóa luôn key đó
     extractContactData(payload){
         const contact = {
             name: payload.name,
@@ -54,6 +56,27 @@ class ContactService {
         });
     }
 
+
+    async update(id, payload){
+        const filter = {
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : null
+        };
+
+        const update = this.extractContactData(payload);
+        const result = await this.Contact.findOneAndUpdate(
+            filter,
+            {$set: update},
+            {returnDocument: "after"},
+        );
+        return result.value;
+    }
+
+    async delete(id){
+        const result = await this.Contact.findOneAndDelete({
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
+        });
+        return result.value;
+    }
 }
 
 module.exports = ContactService;
