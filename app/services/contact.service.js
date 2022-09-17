@@ -56,7 +56,7 @@ class ContactService {
         });
     }
 
-
+    // Cập nhật theo id
     async update(id, payload){
         const filter = {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null
@@ -71,11 +71,17 @@ class ContactService {
         return result.value;
     }
 
+    // Xóa theo id
     async delete(id){
         const result = await this.Contact.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
         return result.value;
+    }
+
+    // Tìm tất cả các contact có key favorite là true
+    async findAllFavorite(){
+        return await this.find({favorite: true});
     }
 }
 
